@@ -17,25 +17,25 @@ class HomePage extends StatelessWidget implements AutoRouteWrapper {
           vertical: 8,
           horizontal: 16,
         ),
-        child: Column(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => AutoRouter.of(context)
-                    .push(CameraRoute(onFaceAvailable: (croppedFace) async {
-                  final isRegistered = await AutoRouter.of(context)
-                      .push(CreateFaceAuthRoute(croppedFace: croppedFace));
-                  if (isRegistered == true) {
-                    AutoRouter.of(context).pop(true);
-                  }
-                })),
-                child: Text('Register Face'),
-              ),
-            ),
-            BlocBuilder<WatchFaceAuthCubit, WatchFaceAuthState>(
-              builder: (context, state) {
-                return SizedBox(
+        child: BlocBuilder<WatchFaceAuthCubit, WatchFaceAuthState>(
+          builder: (context, state) {
+            return Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => AutoRouter.of(context)
+                        .push(CameraRoute(onFaceAvailable: (croppedFace) async {
+                      final isRegistered = await AutoRouter.of(context)
+                          .push(CreateFaceAuthRoute(croppedFace: croppedFace));
+                      if (isRegistered == true) {
+                        AutoRouter.of(context).pop(true);
+                      }
+                    })),
+                    child: Text('Register Face'),
+                  ),
+                ),
+                SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: state is WatchFaceAuthStateSuccess &&
@@ -48,10 +48,21 @@ class HomePage extends StatelessWidget implements AutoRouteWrapper {
                         : null,
                     child: Text('Compare Face'),
                   ),
-                );
-              },
-            )
-          ],
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed:  () => AutoRouter.of(context).push(CameraRoute(
+                                onFaceAvailable: (croppedFace) async {
+                              await AutoRouter.of(context).push(
+                                  AntiSpoofingRoute(faceImage: croppedFace));
+                            })),
+                    child: Text('Anti Spoofing Face'),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
