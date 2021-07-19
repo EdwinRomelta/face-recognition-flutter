@@ -9,7 +9,14 @@ import 'package:tflite_flutter/tflite_flutter.dart';
 class MobileFaceNetService {
   @factoryMethod
   static Future<MobileFaceNetService> create() async {
-    final interpreter = await Interpreter.fromAsset('MobileFaceNet.tflite');
+    final interpreterOptions = InterpreterOptions();
+    interpreterOptions.threads = 4;
+    interpreterOptions.useNnApiForAndroid = true;
+    interpreterOptions.useMetalDelegateForIOS = true;
+    final interpreter = await Interpreter.fromAsset(
+      'MobileFaceNet.tflite',
+      options: interpreterOptions,
+    );
     return MobileFaceNetService._(interpreter);
   }
 

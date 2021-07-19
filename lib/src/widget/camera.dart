@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 
 class Camera extends StatefulWidget with WidgetsBindingObserver {
   final onLatestImageAvailable? onImageAvailable;
+  final void Function(Size? cameraPreviewSize)? onSizeAvailable;
+  final ResolutionPreset resolutionPreset;
 
-  Camera({this.onImageAvailable});
+  Camera({
+    this.onImageAvailable,
+    this.onSizeAvailable,
+    this.resolutionPreset = ResolutionPreset.high,
+  });
 
   @override
   _CameraState createState() => _CameraState();
@@ -75,7 +81,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   Future _initCameraController(CameraDescription cameraDescription) async {
     await this._controller?.dispose();
     final _controller =
-        CameraController(cameraDescription, ResolutionPreset.max);
+        CameraController(cameraDescription, widget.resolutionPreset);
     this._controller = _controller;
     _controller.addListener(() {
       if (mounted) {
@@ -91,6 +97,10 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
       final onImageAvailable = widget.onImageAvailable;
       if (onImageAvailable != null) {
         await _controller.startImageStream(onImageAvailable);
+      }
+      final onSizeAvailable = widget.onSizeAvailable;
+      if(onSizeAvailable != null){
+        onSizeAvailable.call(_controller.value.previewSize);
       }
     } on CameraException catch (e) {
       print('Camera error ${e.description}');

@@ -4,7 +4,7 @@
 // AutoRouteGenerator
 // **************************************************************************
 
-import 'dart:typed_data' as _i8;
+import 'dart:typed_data' as _i9;
 
 import 'package:auto_route/auto_route.dart' as _i1;
 import 'package:face_recognition_flutter/src/page/anti_spoofing_page.dart'
@@ -14,6 +14,8 @@ import 'package:face_recognition_flutter/src/page/compare_page.dart' as _i6;
 import 'package:face_recognition_flutter/src/page/create_face_auth_page.dart'
     as _i5;
 import 'package:face_recognition_flutter/src/page/home_page.dart' as _i3;
+import 'package:face_recognition_flutter/src/page/real_time_processing_page.dart'
+    as _i8;
 import 'package:flutter/material.dart' as _i2;
 
 class AppRouter extends _i1.RootStackRouter {
@@ -50,6 +52,11 @@ class AppRouter extends _i1.RootStackRouter {
         builder: (data) {
           final args = data.argsAs<AntiSpoofingRouteArgs>();
           return _i7.AntiSpoofingPage(args.faceImage);
+        }),
+    RealTimeProcessingRoute.name: (routeData) => _i1.AdaptivePage<dynamic>(
+        routeData: routeData,
+        builder: (_) {
+          return _i8.RealTimeProcessingPage();
         })
   };
 
@@ -60,7 +67,9 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig(CreateFaceAuthRoute.name,
             path: '/create-face-auth-page'),
         _i1.RouteConfig(CompareRoute.name, path: '/compare-page'),
-        _i1.RouteConfig(AntiSpoofingRoute.name, path: '/anti-spoofing-page')
+        _i1.RouteConfig(AntiSpoofingRoute.name, path: '/anti-spoofing-page'),
+        _i1.RouteConfig(RealTimeProcessingRoute.name,
+            path: '/real-time-processing-page')
       ];
 }
 
@@ -71,7 +80,7 @@ class HomeRoute extends _i1.PageRouteInfo {
 }
 
 class CameraRoute extends _i1.PageRouteInfo<CameraRouteArgs> {
-  CameraRoute({required void Function(_i8.Uint8List) onFaceAvailable})
+  CameraRoute({required void Function(_i9.Uint8List) onFaceAvailable})
       : super(name,
             path: '/camera-page',
             args: CameraRouteArgs(onFaceAvailable: onFaceAvailable));
@@ -82,11 +91,11 @@ class CameraRoute extends _i1.PageRouteInfo<CameraRouteArgs> {
 class CameraRouteArgs {
   const CameraRouteArgs({required this.onFaceAvailable});
 
-  final void Function(_i8.Uint8List) onFaceAvailable;
+  final void Function(_i9.Uint8List) onFaceAvailable;
 }
 
 class CreateFaceAuthRoute extends _i1.PageRouteInfo<CreateFaceAuthRouteArgs> {
-  CreateFaceAuthRoute({required _i8.Uint8List croppedFace})
+  CreateFaceAuthRoute({required _i9.Uint8List croppedFace})
       : super(name,
             path: '/create-face-auth-page',
             args: CreateFaceAuthRouteArgs(croppedFace: croppedFace));
@@ -97,11 +106,11 @@ class CreateFaceAuthRoute extends _i1.PageRouteInfo<CreateFaceAuthRouteArgs> {
 class CreateFaceAuthRouteArgs {
   const CreateFaceAuthRouteArgs({required this.croppedFace});
 
-  final _i8.Uint8List croppedFace;
+  final _i9.Uint8List croppedFace;
 }
 
 class CompareRoute extends _i1.PageRouteInfo<CompareRouteArgs> {
-  CompareRoute({required _i8.Uint8List faceImage})
+  CompareRoute({required _i9.Uint8List faceImage})
       : super(name,
             path: '/compare-page',
             args: CompareRouteArgs(faceImage: faceImage));
@@ -112,11 +121,11 @@ class CompareRoute extends _i1.PageRouteInfo<CompareRouteArgs> {
 class CompareRouteArgs {
   const CompareRouteArgs({required this.faceImage});
 
-  final _i8.Uint8List faceImage;
+  final _i9.Uint8List faceImage;
 }
 
 class AntiSpoofingRoute extends _i1.PageRouteInfo<AntiSpoofingRouteArgs> {
-  AntiSpoofingRoute({required _i8.Uint8List faceImage})
+  AntiSpoofingRoute({required _i9.Uint8List faceImage})
       : super(name,
             path: '/anti-spoofing-page',
             args: AntiSpoofingRouteArgs(faceImage: faceImage));
@@ -127,5 +136,12 @@ class AntiSpoofingRoute extends _i1.PageRouteInfo<AntiSpoofingRouteArgs> {
 class AntiSpoofingRouteArgs {
   const AntiSpoofingRouteArgs({required this.faceImage});
 
-  final _i8.Uint8List faceImage;
+  final _i9.Uint8List faceImage;
+}
+
+class RealTimeProcessingRoute extends _i1.PageRouteInfo {
+  const RealTimeProcessingRoute()
+      : super(name, path: '/real-time-processing-page');
+
+  static const String name = 'RealTimeProcessingRoute';
 }

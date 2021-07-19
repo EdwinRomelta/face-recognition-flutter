@@ -25,10 +25,10 @@ class _$AntiSpoofingStateTearOff {
   }
 
   _AntiSpoofingStateSuccess success(
-      int laplacian, double antiSpoofing, bool isFraud) {
+      int laplacian, double liveness, bool isFraud) {
     return _AntiSpoofingStateSuccess(
       laplacian,
-      antiSpoofing,
+      liveness,
       isFraud,
     );
   }
@@ -43,7 +43,7 @@ mixin _$AntiSpoofingState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() failed,
-    required TResult Function(int laplacian, double antiSpoofing, bool isFraud)
+    required TResult Function(int laplacian, double liveness, bool isFraud)
         success,
   }) =>
       throw _privateConstructorUsedError;
@@ -51,7 +51,7 @@ mixin _$AntiSpoofingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? failed,
-    TResult Function(int laplacian, double antiSpoofing, bool isFraud)? success,
+    TResult Function(int laplacian, double liveness, bool isFraud)? success,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -132,7 +132,7 @@ class _$_AntiSpoofingStateInitial implements _AntiSpoofingStateInitial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() failed,
-    required TResult Function(int laplacian, double antiSpoofing, bool isFraud)
+    required TResult Function(int laplacian, double liveness, bool isFraud)
         success,
   }) {
     return initial();
@@ -143,7 +143,7 @@ class _$_AntiSpoofingStateInitial implements _AntiSpoofingStateInitial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? failed,
-    TResult Function(int laplacian, double antiSpoofing, bool isFraud)? success,
+    TResult Function(int laplacian, double liveness, bool isFraud)? success,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -224,7 +224,7 @@ class _$_AntiSpoofingStateFailed implements _AntiSpoofingStateFailed {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() failed,
-    required TResult Function(int laplacian, double antiSpoofing, bool isFraud)
+    required TResult Function(int laplacian, double liveness, bool isFraud)
         success,
   }) {
     return failed();
@@ -235,7 +235,7 @@ class _$_AntiSpoofingStateFailed implements _AntiSpoofingStateFailed {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? failed,
-    TResult Function(int laplacian, double antiSpoofing, bool isFraud)? success,
+    TResult Function(int laplacian, double liveness, bool isFraud)? success,
     required TResult orElse(),
   }) {
     if (failed != null) {
@@ -278,7 +278,7 @@ abstract class _$AntiSpoofingStateSuccessCopyWith<$Res> {
   factory _$AntiSpoofingStateSuccessCopyWith(_AntiSpoofingStateSuccess value,
           $Res Function(_AntiSpoofingStateSuccess) then) =
       __$AntiSpoofingStateSuccessCopyWithImpl<$Res>;
-  $Res call({int laplacian, double antiSpoofing, bool isFraud});
+  $Res call({int laplacian, double liveness, bool isFraud});
 }
 
 /// @nodoc
@@ -296,7 +296,7 @@ class __$AntiSpoofingStateSuccessCopyWithImpl<$Res>
   @override
   $Res call({
     Object? laplacian = freezed,
-    Object? antiSpoofing = freezed,
+    Object? liveness = freezed,
     Object? isFraud = freezed,
   }) {
     return _then(_AntiSpoofingStateSuccess(
@@ -304,9 +304,9 @@ class __$AntiSpoofingStateSuccessCopyWithImpl<$Res>
           ? _value.laplacian
           : laplacian // ignore: cast_nullable_to_non_nullable
               as int,
-      antiSpoofing == freezed
-          ? _value.antiSpoofing
-          : antiSpoofing // ignore: cast_nullable_to_non_nullable
+      liveness == freezed
+          ? _value.liveness
+          : liveness // ignore: cast_nullable_to_non_nullable
               as double,
       isFraud == freezed
           ? _value.isFraud
@@ -320,18 +320,18 @@ class __$AntiSpoofingStateSuccessCopyWithImpl<$Res>
 
 class _$_AntiSpoofingStateSuccess implements _AntiSpoofingStateSuccess {
   const _$_AntiSpoofingStateSuccess(
-      this.laplacian, this.antiSpoofing, this.isFraud);
+      this.laplacian, this.liveness, this.isFraud);
 
   @override
   final int laplacian;
   @override
-  final double antiSpoofing;
+  final double liveness;
   @override
   final bool isFraud;
 
   @override
   String toString() {
-    return 'AntiSpoofingState.success(laplacian: $laplacian, antiSpoofing: $antiSpoofing, isFraud: $isFraud)';
+    return 'AntiSpoofingState.success(laplacian: $laplacian, liveness: $liveness, isFraud: $isFraud)';
   }
 
   @override
@@ -341,9 +341,9 @@ class _$_AntiSpoofingStateSuccess implements _AntiSpoofingStateSuccess {
             (identical(other.laplacian, laplacian) ||
                 const DeepCollectionEquality()
                     .equals(other.laplacian, laplacian)) &&
-            (identical(other.antiSpoofing, antiSpoofing) ||
+            (identical(other.liveness, liveness) ||
                 const DeepCollectionEquality()
-                    .equals(other.antiSpoofing, antiSpoofing)) &&
+                    .equals(other.liveness, liveness)) &&
             (identical(other.isFraud, isFraud) ||
                 const DeepCollectionEquality().equals(other.isFraud, isFraud)));
   }
@@ -352,7 +352,7 @@ class _$_AntiSpoofingStateSuccess implements _AntiSpoofingStateSuccess {
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(laplacian) ^
-      const DeepCollectionEquality().hash(antiSpoofing) ^
+      const DeepCollectionEquality().hash(liveness) ^
       const DeepCollectionEquality().hash(isFraud);
 
   @JsonKey(ignore: true)
@@ -366,10 +366,10 @@ class _$_AntiSpoofingStateSuccess implements _AntiSpoofingStateSuccess {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() failed,
-    required TResult Function(int laplacian, double antiSpoofing, bool isFraud)
+    required TResult Function(int laplacian, double liveness, bool isFraud)
         success,
   }) {
-    return success(laplacian, antiSpoofing, isFraud);
+    return success(laplacian, liveness, isFraud);
   }
 
   @override
@@ -377,11 +377,11 @@ class _$_AntiSpoofingStateSuccess implements _AntiSpoofingStateSuccess {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? failed,
-    TResult Function(int laplacian, double antiSpoofing, bool isFraud)? success,
+    TResult Function(int laplacian, double liveness, bool isFraud)? success,
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success(laplacian, antiSpoofing, isFraud);
+      return success(laplacian, liveness, isFraud);
     }
     return orElse();
   }
@@ -413,11 +413,11 @@ class _$_AntiSpoofingStateSuccess implements _AntiSpoofingStateSuccess {
 
 abstract class _AntiSpoofingStateSuccess implements AntiSpoofingState {
   const factory _AntiSpoofingStateSuccess(
-          int laplacian, double antiSpoofing, bool isFraud) =
+          int laplacian, double liveness, bool isFraud) =
       _$_AntiSpoofingStateSuccess;
 
   int get laplacian => throw _privateConstructorUsedError;
-  double get antiSpoofing => throw _privateConstructorUsedError;
+  double get liveness => throw _privateConstructorUsedError;
   bool get isFraud => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   _$AntiSpoofingStateSuccessCopyWith<_AntiSpoofingStateSuccess> get copyWith =>

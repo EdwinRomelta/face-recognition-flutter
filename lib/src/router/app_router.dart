@@ -4,6 +4,7 @@ import 'package:face_recognition_flutter/src/page/camera_page.dart';
 import 'package:face_recognition_flutter/src/page/compare_page.dart';
 import 'package:face_recognition_flutter/src/page/create_face_auth_page.dart';
 import 'package:face_recognition_flutter/src/page/home_page.dart';
+import 'package:face_recognition_flutter/src/page/real_time_processing_page.dart';
 
 @AdaptiveAutoRouter(
   replaceInRouteName: 'Page,Route',
@@ -23,6 +24,9 @@ import 'package:face_recognition_flutter/src/page/home_page.dart';
     ),
     AutoRoute(
       page: AntiSpoofingPage,
+    ),
+    AutoRoute(
+      page: RealTimeProcessingPage,
     ),
   ],
 )

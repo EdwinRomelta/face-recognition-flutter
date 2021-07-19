@@ -52,12 +52,20 @@ class HomePage extends StatelessWidget implements AutoRouteWrapper {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed:  () => AutoRouter.of(context).push(CameraRoute(
-                                onFaceAvailable: (croppedFace) async {
-                              await AutoRouter.of(context).push(
-                                  AntiSpoofingRoute(faceImage: croppedFace));
-                            })),
+                    onPressed: () => AutoRouter.of(context)
+                        .push(CameraRoute(onFaceAvailable: (croppedFace) async {
+                      await AutoRouter.of(context)
+                          .push(AntiSpoofingRoute(faceImage: croppedFace));
+                    })),
                     child: Text('Anti Spoofing Face'),
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () =>
+                        AutoRouter.of(context).push(RealTimeProcessingRoute()),
+                    child: Text('Real Time Detector'),
                   ),
                 ),
               ],
