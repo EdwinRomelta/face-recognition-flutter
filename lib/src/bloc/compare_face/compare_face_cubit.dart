@@ -24,7 +24,7 @@ class CompareFaceCubit extends Cubit<CompareFaceState> {
     final image = imglib.decodeImage(List.from(faceImage));
     if (image == null) return emit(CompareFaceState.failed());
     try {
-      final faceMetadata = _mobileFaceNetService.process(image);
+      final faceMetadata = await _mobileFaceNetService.process(image);
       final faceList = await _faceAuthRepository.watchAll().first;
       emit(CompareFaceState.success(faceList
           .map((faceAuth) {

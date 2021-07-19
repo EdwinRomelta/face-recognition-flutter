@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:face_recognition_flutter/src/utilities/interpreter_utils.dart';
 import 'package:image/image.dart' as imglib;
 import 'package:injectable/injectable.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
@@ -24,11 +25,11 @@ class MobileFaceNetService {
 
   MobileFaceNetService._(this._interpreter);
 
-  List<double> process(imglib.Image image) {
+  Future<List<double>> process(imglib.Image image) async {
     var input = _preProcess(image);
     input = input.reshape([1, 112, 112, 3]);
     var output = List.filled(1 * 192, 0.0).reshape([1, 192]);
-    _interpreter.run(input, output);
+    output = await _interpreter.runCompute(input, output);
     return List.from(output.reshape([192]));
   }
 
@@ -40,14 +41,14 @@ class MobileFaceNetService {
     for (var i = 0; i < comparedMetadata.length; i++) {
       sum += pow((metadata[i] - comparedMetadata[i]), 2);
     }
-    var confidance = 0.0;
+    var confidence = 0.0;
     for (var i = 0; i < 400; i++) {
       var threshold = 0.01 * (i + 1);
       if (sum < threshold) {
-        confidance += 1.0 / 400;
+        confidence += 1.0 / 400;
       }
     }
-    return confidance;
+    return confidence;
   }
 
   List _preProcess(imglib.Image image) {

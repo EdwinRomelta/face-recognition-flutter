@@ -20,7 +20,7 @@ class _$DetectedFaceTearOff {
       {required int trackingId,
       required Rect boundingBox,
       bool? isFraud,
-      required String label,
+      String? label,
       double? probability}) {
     return _DetectedFace(
       trackingId: trackingId,
@@ -40,7 +40,7 @@ mixin _$DetectedFace {
   int get trackingId => throw _privateConstructorUsedError;
   Rect get boundingBox => throw _privateConstructorUsedError;
   bool? get isFraud => throw _privateConstructorUsedError;
-  String get label => throw _privateConstructorUsedError;
+  String? get label => throw _privateConstructorUsedError;
   double? get probability => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -57,7 +57,7 @@ abstract class $DetectedFaceCopyWith<$Res> {
       {int trackingId,
       Rect boundingBox,
       bool? isFraud,
-      String label,
+      String? label,
       double? probability});
 }
 
@@ -93,7 +93,7 @@ class _$DetectedFaceCopyWithImpl<$Res> implements $DetectedFaceCopyWith<$Res> {
       label: label == freezed
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       probability: probability == freezed
           ? _value.probability
           : probability // ignore: cast_nullable_to_non_nullable
@@ -113,7 +113,7 @@ abstract class _$DetectedFaceCopyWith<$Res>
       {int trackingId,
       Rect boundingBox,
       bool? isFraud,
-      String label,
+      String? label,
       double? probability});
 }
 
@@ -151,7 +151,7 @@ class __$DetectedFaceCopyWithImpl<$Res> extends _$DetectedFaceCopyWithImpl<$Res>
       label: label == freezed
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       probability: probability == freezed
           ? _value.probability
           : probability // ignore: cast_nullable_to_non_nullable
@@ -167,7 +167,7 @@ class _$_DetectedFace implements _DetectedFace {
       {required this.trackingId,
       required this.boundingBox,
       this.isFraud,
-      required this.label,
+      this.label,
       this.probability});
 
   @override
@@ -177,7 +177,7 @@ class _$_DetectedFace implements _DetectedFace {
   @override
   final bool? isFraud;
   @override
-  final String label;
+  final String? label;
   @override
   final double? probability;
 
@@ -226,7 +226,7 @@ abstract class _DetectedFace implements DetectedFace {
       {required int trackingId,
       required Rect boundingBox,
       bool? isFraud,
-      required String label,
+      String? label,
       double? probability}) = _$_DetectedFace;
 
   @override
@@ -236,7 +236,7 @@ abstract class _DetectedFace implements DetectedFace {
   @override
   bool? get isFraud => throw _privateConstructorUsedError;
   @override
-  String get label => throw _privateConstructorUsedError;
+  String? get label => throw _privateConstructorUsedError;
   @override
   double? get probability => throw _privateConstructorUsedError;
   @override

@@ -72,23 +72,28 @@ class _FaceDetectorPainter extends CustomPainter {
             scaleY: _scaleY),
         _paint..color = _color,
       );
-      final label = StringBuffer(face.label);
-      final probability = face.probability;
-      if(probability != null){
-        label.write(' ${probability.toStringAsFixed(2)}');
+      final _label = face.label;
+      if(_label != null) {
+        final label = StringBuffer(_label);
+        final probability = face.probability;
+        if (probability != null) {
+          label.write(' ${probability.toStringAsFixed(2)}');
+        }
+        final span =
+        TextSpan(style: TextStyle(color: _color, fontSize: 24),
+            text: label.toString());
+        final textPainter = TextPainter(
+            text: span,
+            textAlign: TextAlign.left,
+            textDirection: TextDirection.ltr);
+        textPainter.layout();
+        textPainter.paint(
+            canvas,
+            Offset(
+                (size.width -
+                    (face.boundingBox.right.toDouble() - 4) * _scaleX),
+                (face.boundingBox.top.toDouble() - 10) * _scaleY));
       }
-      final span =
-          TextSpan(style: TextStyle(color: _color, fontSize: 24), text: label.toString());
-      final textPainter = TextPainter(
-          text: span,
-          textAlign: TextAlign.left,
-          textDirection: TextDirection.ltr);
-      textPainter.layout();
-      textPainter.paint(
-          canvas,
-          Offset(
-              (size.width - (face.boundingBox.right.toDouble() - 4) * _scaleX),
-              (face.boundingBox.top.toDouble() - 10) * _scaleY));
     }
   }
 

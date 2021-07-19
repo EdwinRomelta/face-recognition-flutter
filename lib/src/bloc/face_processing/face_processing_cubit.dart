@@ -31,6 +31,7 @@ class FaceProcessingCubit extends Cubit<FaceProcessingState> {
   late final StreamSubscription<List<FaceAuth>> _streamSubscription;
   bool _isComputing = false;
   final List<FaceAuth> _faceAuthList = List.empty(growable: true);
+  Future<void>? _processFuture;
 
   FaceProcessingCubit(
     this._faceAuthRepository,
@@ -48,36 +49,23 @@ class FaceProcessingCubit extends Cubit<FaceProcessingState> {
     _isComputing = true;
     try {
       final faceList = await _findFace(availableImage);
-      final faceAuthList = _faceAuthList;
-      final trackerIdList =
-          faceList.map((face) => face.trackingId).whereNotNull();
-      for (var face in faceList) {
+      final trackerIdList = faceList.map((face) {
         final trackingId = face.trackingId;
         if (trackingId != null) {
-          String label = 'Unknown';
-          double? probability;
-          final croppedFace = FaceUtils.cropFace(availableImage, face);
-          if (faceAuthList.isNotEmpty) {
-            List<double> metadata = _mobileFaceNetService.process(croppedFace);
-            var currentProbability = 0.0;
-            for (var faceAuth in faceAuthList) {
-              final computedProbability =
-              _mobileFaceNetService.compare(metadata, faceAuth.metadata);
-              if (currentProbability < computedProbability &&
-                  computedProbability > 0.80) {
-                probability = computedProbability;
-                label = faceAuth.label;
-              }
-            }
+          final detectedFace = _detectedMap[trackingId];
+          if (detectedFace == null) {
+            _detectedMap[trackingId] = DetectedFace(
+              trackingId: trackingId,
+              boundingBox: face.boundingBox,
+            );
+          } else {
+            _detectedMap[trackingId] =
+                detectedFace.copyWith(boundingBox: face.boundingBox);
           }
-          _detectedMap[trackingId] = DetectedFace(
-            trackingId: trackingId,
-            boundingBox: face.boundingBox,
-            label: label,
-            probability: probability,
-          );
         }
-      }
+        return trackingId;
+      }).whereNotNull();
+      _processFuture ??= _processFace(availableImage, faceList);
       emit(FaceProcessingState.faceFound(_detectedMap.values
           .where(
               (detectedFace) => trackerIdList.contains(detectedFace.trackingId))
@@ -92,6 +80,52 @@ class FaceProcessingCubit extends Cubit<FaceProcessingState> {
   Future<void> close() {
     _streamSubscription.cancel();
     return super.close();
+  }
+
+  Future<void> _processFace(
+      CameraImage availableImage, List<Face> faceList) async {
+    try {
+      final faceAuthList = _faceAuthList;
+      for (var face in faceList) {
+        final trackingId = face.trackingId;
+        if (trackingId != null) {
+          String label = 'Unknown';
+          double? probability;
+          final croppedFace = FaceUtils.cropFace(availableImage, face);
+          if (faceAuthList.isNotEmpty) {
+            List<double> metadata =
+                await _mobileFaceNetService.process(croppedFace);
+            var currentProbability = 0.0;
+            for (var faceAuth in faceAuthList) {
+              final computedProbability =
+                  _mobileFaceNetService.compare(metadata, faceAuth.metadata);
+              if (currentProbability < computedProbability &&
+                  computedProbability > 0.80) {
+                probability = computedProbability;
+                label = faceAuth.label;
+              }
+            }
+          }
+          final detectedFace = _detectedMap[trackingId];
+          if (detectedFace == null) {
+            _detectedMap[trackingId] = DetectedFace(
+              trackingId: trackingId,
+              boundingBox: face.boundingBox,
+              label: label,
+              probability: probability,
+            );
+          } else {
+            _detectedMap[trackingId] = detectedFace.copyWith(
+              label: label,
+              probability: probability,
+            );
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    _processFuture = null;
   }
 
   Future<List<Face>> _findFace(CameraImage availableImage) async {

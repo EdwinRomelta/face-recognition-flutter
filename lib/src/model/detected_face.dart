@@ -9,7 +9,7 @@ class DetectedFace with _$DetectedFace {
     required int trackingId,
     required Rect boundingBox,
     bool? isFraud,
-    required String label,
+    String? label,
     double? probability,
   }) = _DetectedFace;
 }

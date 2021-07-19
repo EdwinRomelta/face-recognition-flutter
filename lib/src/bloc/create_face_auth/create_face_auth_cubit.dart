@@ -26,7 +26,7 @@ class CreateFaceAuthCubit extends Cubit<CreateFaceAuthState> {
     final image = imglib.decodeImage(List.from(imageData));
     if (image == null) return emit(CreateFaceAuthState.failed());
     try {
-      List<double> metadata = _mobileFaceNetService.process(image);
+      List<double> metadata = await _mobileFaceNetService.process(image);
       final appDir = await getApplicationSupportDirectory();
       final faceDir =
           await Directory('${appDir.path}/face').create(recursive: true);
