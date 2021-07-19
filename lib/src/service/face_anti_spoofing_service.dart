@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:face_recognition_flutter/src/utilities/interpreter_utils.dart';
 import 'package:image/image.dart' as imglib;
 import 'package:injectable/injectable.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
@@ -8,6 +9,9 @@ const _laplaceThreshold = 50;
 
 @singleton
 class FaceAntiSpoofingService {
+  static const clearnessThreshold = 1000;
+  static const livenessThreshold = 0.2;
+
   @factoryMethod
   static Future<FaceAntiSpoofingService> create() async {
     final interpreter = await Interpreter.fromAsset('FaceAntiSpoofing.tflite');
@@ -46,7 +50,15 @@ class FaceAntiSpoofingService {
     return score;
   }
 
-  double antiSpoofing(imglib.Image image) {
+  Future<bool> antiSpoofing(imglib.Image image) async {
+    final clearness = laplacian(image);
+    if (clearness < FaceAntiSpoofingService.clearnessThreshold) return true;
+    final antiSpoofing = await liveness(image);
+    if (antiSpoofing > FaceAntiSpoofingService.livenessThreshold) return true;
+    return false;
+  }
+
+  Future<double> liveness(imglib.Image image) async {
     var input = _preProcess(image);
     input = input.reshape([1, 256, 256, 3]);
     var output = <int, Object>{};
@@ -54,12 +66,8 @@ class FaceAntiSpoofingService {
     List leafNodeMask = List.filled(1 * 8, 0.0).reshape([1, 8]);
     output[_interpreter.getOutputIndex("Identity")] = clssPred;
     output[_interpreter.getOutputIndex("Identity_1")] = leafNodeMask;
-    try {
-      _interpreter.runForMultipleInputs([input], output);
-      return _leafScore(clssPred, leafNodeMask);
-    } catch (e) {
-      return 0;
-    }
+    output = await _interpreter.runForMultipleInputsCompute([input], output);
+    return _leafScore(clssPred, leafNodeMask);
   }
 
   double _leafScore(List clssPred, List leafNodeMask) {

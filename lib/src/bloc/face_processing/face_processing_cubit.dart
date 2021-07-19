@@ -106,20 +106,29 @@ class FaceProcessingCubit extends Cubit<FaceProcessingState> {
               }
             }
           }
-          final detectedFace = _detectedMap[trackingId];
-          if (detectedFace == null) {
-            _detectedMap[trackingId] = DetectedFace(
-              trackingId: trackingId,
-              boundingBox: face.boundingBox,
+          _detectedMap.update(trackingId, (value) {
+            return value.copyWith(
               label: label,
               probability: probability,
             );
-          } else {
-            _detectedMap[trackingId] = detectedFace.copyWith(
-              label: label,
-              probability: probability,
+          },
+              ifAbsent: () => DetectedFace(
+                    trackingId: trackingId,
+                    boundingBox: face.boundingBox,
+                  ));
+          bool isFraud =
+              await _faceAntiSpoofingService.antiSpoofing(croppedFace);
+          _detectedMap.update(trackingId, (value) {
+            return value.copyWith(
+              isFraud: isFraud,
             );
-          }
+          },
+              ifAbsent: () => DetectedFace(
+                    trackingId: trackingId,
+                    boundingBox: face.boundingBox,
+                    label: label,
+                    probability: probability,
+                  ));
         }
       }
     } catch (e) {

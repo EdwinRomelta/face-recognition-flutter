@@ -22,9 +22,9 @@ class AntiSpoofingCubit extends Cubit<AntiSpoofingState> {
     if (image == null) return emit(AntiSpoofingState.failed());
     try {
       final laplacian = _faceAntiSpoofingService.laplacian(image);
-      final antiSpoofing = _faceAntiSpoofingService.antiSpoofing(image);
+      final antiSpoofing = await _faceAntiSpoofingService.liveness(image);
       emit(AntiSpoofingState.success(
-          laplacian, antiSpoofing, (laplacian < 1000 || antiSpoofing >= 0.2)));
+          laplacian, antiSpoofing, (laplacian < FaceAntiSpoofingService.clearnessThreshold || antiSpoofing >= FaceAntiSpoofingService.livenessThreshold)));
     } catch (e) {
       emit(AntiSpoofingState.failed());
     }
